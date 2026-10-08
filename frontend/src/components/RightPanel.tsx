@@ -22,7 +22,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
   return (
     <aside className="hidden lg:flex flex-col gap-5 w-84 py-6 pr-6">
       {/* Super Duolingo Promo Card */}
-      <div className="rounded-2xl border-2 border-[#e5e5e5] p-5 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white shadow-sm relative overflow-hidden">
+      <div className="rounded-2xl border-2 border-[#e5e5e5] dark:border-[#2e4550] p-5 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white shadow-sm relative overflow-hidden">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="w-5 h-5 text-[#ffc800]" />
           <h3 className="font-extrabold text-sm uppercase tracking-wider text-[#ffc800]">
@@ -41,9 +41,9 @@ export const RightPanel: React.FC<RightPanelProps> = ({
       </div>
 
       {/* Unlock / League Card */}
-      <div className="rounded-2xl border-2 border-[#e5e5e5] p-5 bg-white">
+      <div className="rounded-2xl border-2 border-[#e5e5e5] dark:border-[#2e4550] p-5 bg-white dark:bg-[#1b2e35]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-extrabold text-base text-[#4b4b4b]">
+          <h3 className="font-extrabold text-base text-[#4b4b4b] dark:text-white">
             {user?.league || "Silver"} League
           </h3>
           <Link
@@ -55,15 +55,15 @@ export const RightPanel: React.FC<RightPanelProps> = ({
           </Link>
         </div>
 
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-[#f7f7f7] mb-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#afafaf] to-[#e5e5e5] flex items-center justify-center text-xl shadow-inner">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-[#f7f7f7] dark:bg-[#131f24] mb-3 border border-transparent dark:border-[#203843]">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#afafaf] to-[#e5e5e5] dark:from-[#2e4550] dark:to-[#1b2e35] flex items-center justify-center text-xl shadow-inner">
             <Shield className="w-6 h-6 text-[#ff9600]" />
           </div>
           <div>
-            <p className="text-xs font-bold text-[#4b4b4b]">
+            <p className="text-xs font-bold text-[#4b4b4b] dark:text-white">
               Top 3 advance to Gold!
             </p>
-            <p className="text-[11px] text-[#777777]">
+            <p className="text-[11px] text-[#777777] dark:text-[#8b9eab]">
               {leaderboard ? leaderboard.time_left : "Season ending soon"}
             </p>
           </div>
@@ -75,13 +75,15 @@ export const RightPanel: React.FC<RightPanelProps> = ({
               <div
                 key={entry.id}
                 className={`flex items-center justify-between text-xs px-2 py-1.5 rounded-lg ${
-                  entry.is_current_user ? "bg-[#ddf4ff] font-extrabold text-[#1cb0f6]" : "text-[#777777]"
+                  entry.is_current_user
+                    ? "bg-[#ddf4ff] dark:bg-[#1b3848] font-extrabold text-[#1cb0f6]"
+                    : "text-[#777777] dark:text-[#8b9eab]"
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-[#afafaf] w-4">{entry.rank}</span>
+                  <span className="font-extrabold text-[#afafaf] dark:text-[#557585] w-4">{entry.rank}</span>
                   <span className="text-base">{entry.avatar}</span>
-                  <span className="truncate max-w-[110px]">{entry.name}</span>
+                  <span className="truncate max-w-[110px] dark:text-white">{entry.name}</span>
                 </div>
                 <span className="font-bold">{entry.xp} XP</span>
               </div>
@@ -91,11 +93,11 @@ export const RightPanel: React.FC<RightPanelProps> = ({
       </div>
 
       {/* Daily Quests Card */}
-      <div className="rounded-2xl border-2 border-[#e5e5e5] p-5 bg-white">
+      <div className="rounded-2xl border-2 border-[#e5e5e5] dark:border-[#2e4550] p-5 bg-white dark:bg-[#1b2e35]">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Target className="w-5 h-5 text-[#ff9600]" />
-            <h3 className="font-extrabold text-base text-[#4b4b4b]">Daily Quests</h3>
+            <h3 className="font-extrabold text-base text-[#4b4b4b] dark:text-white">Daily Quests</h3>
           </div>
           <Link
             href="/quests"
@@ -114,17 +116,17 @@ export const RightPanel: React.FC<RightPanelProps> = ({
             return (
               <div key={quest.id} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-[#4b4b4b] flex items-center gap-1.5">
+                  <span className="font-bold text-[#4b4b4b] dark:text-white flex items-center gap-1.5">
                     <Zap className="w-3.5 h-3.5 text-[#ffc800] fill-[#ffc800]" />
                     {quest.title}
                   </span>
-                  <span className="text-[#777777] font-semibold text-[11px]">
+                  <span className="text-[#777777] dark:text-[#8b9eab] font-semibold text-[11px]">
                     {quest.current_progress}/{quest.target_progress}
                   </span>
                 </div>
 
-                {/* Progress bar */}
-                <div className="w-full h-3 rounded-full bg-[#e5e5e5] overflow-hidden relative">
+                {/* Progress bar with chest icon on end */}
+                <div className="w-full h-3 rounded-full bg-[#e5e5e5] dark:bg-[#203843] overflow-hidden relative">
                   <div
                     className="h-full bg-[#ff9600] rounded-full transition-all duration-500"
                     style={{ width: `${pct}%` }}

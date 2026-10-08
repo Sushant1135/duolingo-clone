@@ -40,7 +40,7 @@ export default function LeaderboardsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#131f24] text-[#4b4b4b] dark:text-white transition-colors">
       <div className="flex">
         <Sidebar onOpenDevTools={() => setShowDevModal(true)} />
 

@@ -91,20 +91,32 @@ def submit_exercise_answer(
     correct_solution = None
     explanation = solution.get("explanation", "")
 
-    # Evaluation based on exercise type
+    # Extract correct solutions for each type
     if exercise.type == "multiple_choice":
-        # Can match option id or option text
+        correct_solution = solution.get("correct_text") or solution.get("correct_option_id")
+    elif exercise.type == "translate_words":
+        correct_solution = " ".join(solution.get("correct_tokens", []))
+    elif exercise.type == "match_pairs":
+        correct_solution = "All matching vocabulary pairs"
+    elif exercise.type == "fill_blank":
+        correct_solution = solution.get("correct_word", "")
+    elif exercise.type == "type_answer":
+        acceptable = solution.get("acceptable_answers", [])
+        primary = solution.get("primary_answer", "")
+        correct_solution = primary or (acceptable[0] if acceptable else "")
+
+    # Evaluation based on exercise type
+    if user_ans == "__SKIPPED__":
+        is_correct = False
+    elif exercise.type == "multiple_choice":
         correct_opt_id = solution.get("correct_option_id")
         correct_text = solution.get("correct_text")
-        correct_solution = correct_text or correct_opt_id
         if str(user_ans).strip().lower() == str(correct_opt_id).strip().lower() or \
            str(user_ans).strip().lower() == str(correct_text).strip().lower():
             is_correct = True
 
     elif exercise.type == "translate_words":
-        # Expecting list of tokens
         correct_tokens = solution.get("correct_tokens", [])
-        correct_solution = " ".join(correct_tokens)
         if isinstance(user_ans, list):
             user_tokens = [str(t).strip() for t in user_ans]
             if user_tokens == correct_tokens:
@@ -116,10 +128,7 @@ def submit_exercise_answer(
                 is_correct = True
 
     elif exercise.type == "match_pairs":
-        # Expecting dict or list of pairs
         pair_dict = solution.get("pairs", {})
-        correct_solution = "All pairs correctly matched"
-        # User answer could be dict {left: right} or boolean indicating completed all pairs
         if isinstance(user_ans, dict):
             matched_all = True
             for k, v in pair_dict.items():
@@ -132,15 +141,11 @@ def submit_exercise_answer(
 
     elif exercise.type == "fill_blank":
         correct_word = solution.get("correct_word", "")
-        correct_solution = correct_word
         if normalize_text(str(user_ans)) == normalize_text(correct_word):
             is_correct = True
 
     elif exercise.type == "type_answer":
         acceptable = solution.get("acceptable_answers", [])
-        primary = solution.get("primary_answer", "")
-        correct_solution = primary or (acceptable[0] if acceptable else "")
-
         norm_user = normalize_text(str(user_ans))
         clean_user = remove_accents(norm_user)
 

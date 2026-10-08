@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Volume2, VolumeX, Flame, Heart, Gem } from "lucide-react";
+import { Volume2, VolumeX, Flame, Heart, Gem, Moon, Sun } from "lucide-react";
 import { User } from "@/lib/api";
 import { sound } from "@/lib/audio";
 
@@ -18,6 +18,32 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenHeartsModal,
 }) => {
   const [isMuted, setIsMuted] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Check initial saved theme or system preference
+    const saved = localStorage.getItem("duo-theme");
+    if (saved === "dark") {
+      setIsDark(true);
+      document.body.classList.add("dark-mode");
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    sound.playClick();
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    if (nextDark) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("duo-theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("duo-theme", "light");
+    }
+  };
 
   const toggleMute = () => {
     const nextMuted = !isMuted;
@@ -27,16 +53,16 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 bg-white/95 backdrop-blur-md border-b-2 border-[#e5e5e5] z-20 px-4 py-3 flex items-center justify-between">
+    <header className="sticky top-0 bg-white/95 dark:bg-[#131f24]/95 backdrop-blur-md border-b-2 border-[#e5e5e5] dark:border-[#2e4550] z-20 px-4 py-3 flex items-center justify-between transition-colors">
       {/* Current Course Selector */}
-      <div className="flex items-center gap-2 cursor-pointer hover:bg-[#f7f7f7] px-3 py-1.5 rounded-xl border border-transparent hover:border-[#e5e5e5] transition-all">
+      <div className="flex items-center gap-2 cursor-pointer hover:bg-[#f7f7f7] dark:hover:bg-[#1b2e35] px-3 py-1.5 rounded-xl border border-transparent hover:border-[#e5e5e5] dark:hover:border-[#2e4550] transition-all">
         <span className="text-2xl" role="img" aria-label="Spanish">🇪🇸</span>
-        <span className="font-extrabold text-xs uppercase tracking-wider text-[#777777] hidden sm:inline">
+        <span className="font-extrabold text-xs uppercase tracking-wider text-[#777777] dark:text-[#8b9eab] hidden sm:inline">
           Spanish
         </span>
       </div>
 
-      {/* Stats Cluster: Streak, Gems, Hearts, Audio */}
+      {/* Stats Cluster: Streak, Gems, Hearts, Dark Mode, Audio */}
       <div className="flex items-center gap-2 sm:gap-4">
         {/* Streak Button */}
         <button
@@ -44,7 +70,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             sound.playClick();
             onOpenStreakModal();
           }}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#fff4e5] transition-colors group"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#fff4e5] dark:hover:bg-[#2b211a] transition-colors group"
           title="Streak Details"
         >
           <Flame className="w-5 h-5 text-[#ff9600] fill-[#ff9600] group-hover:scale-110 transition-transform" />
@@ -57,7 +83,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <Link
           href="/shop"
           onClick={() => sound.playClick()}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#eef9ff] transition-colors group"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#eef9ff] dark:hover:bg-[#1b3848] transition-colors group"
           title="Gems & Shop"
         >
           <Gem className="w-5 h-5 text-[#1cb0f6] fill-[#1cb0f6] group-hover:scale-110 transition-transform" />
@@ -72,7 +98,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             sound.playClick();
             onOpenHeartsModal();
           }}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#ffebee] transition-colors group"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#ffebee] dark:hover:bg-[#381418] transition-colors group"
           title="Hearts Refill"
         >
           <Heart
@@ -91,10 +117,23 @@ export const TopBar: React.FC<TopBarProps> = ({
           </span>
         </button>
 
+        {/* Theme Toggle (Dark / Light Mode) */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-xl text-[#777777] dark:text-[#8b9eab] hover:bg-[#f7f7f7] dark:hover:bg-[#1b2e35] transition-colors"
+          title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {isDark ? (
+            <Sun className="w-5 h-5 text-[#ffc800]" />
+          ) : (
+            <Moon className="w-5 h-5 text-[#777777]" />
+          )}
+        </button>
+
         {/* Audio Toggle */}
         <button
           onClick={toggleMute}
-          className="p-1.5 rounded-xl text-[#afafaf] hover:text-[#4b4b4b] hover:bg-[#f7f7f7] transition-colors"
+          className="p-2 rounded-xl text-[#afafaf] hover:text-[#4b4b4b] dark:hover:text-white hover:bg-[#f7f7f7] dark:hover:bg-[#1b2e35] transition-colors"
           title={isMuted ? "Unmute Audio" : "Mute Audio"}
         >
           {isMuted ? (

@@ -118,7 +118,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#131f24] text-[#4b4b4b] dark:text-white transition-colors">
       {/* If currently playing a lesson, render the LessonPlayer */}
       {activeLessonId !== null ? (
         <LessonPlayer

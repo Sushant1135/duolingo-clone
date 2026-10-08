@@ -24,7 +24,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDevTools }) => {
   return (
     <>
       {/* Desktop Left Sidebar */}
-      <aside className="hidden md:flex flex-col justify-between w-64 h-screen fixed left-0 top-0 border-r-2 border-[#e5e5e5] bg-white p-4 z-30">
+      <aside className="hidden md:flex flex-col justify-between w-64 h-screen fixed left-0 top-0 border-r-2 border-[#e5e5e5] dark:border-[#2e4550] bg-white dark:bg-[#131f24] p-4 z-30 transition-colors">
         <div>
           {/* Logo */}
           <Link
@@ -52,11 +52,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDevTools }) => {
                   onClick={() => sound.playClick()}
                   className={`flex items-center gap-4 px-4 py-3 rounded-2xl font-bold text-sm tracking-wide transition-all border-2 ${
                     isActive
-                      ? "bg-[#ddf4ff] text-[#1cb0f6] border-[#84d8ff]"
-                      : "text-[#777777] border-transparent hover:bg-[#f7f7f7] hover:text-[#4b4b4b]"
+                      ? "bg-[#ddf4ff] dark:bg-[#1b3848] text-[#1cb0f6] border-[#84d8ff] dark:border-[#1cb0f6]"
+                      : "text-[#777777] dark:text-[#8b9eab] border-transparent hover:bg-[#f7f7f7] dark:hover:bg-[#1b2e35] hover:text-[#4b4b4b] dark:hover:text-white"
                   }`}
                 >
-                  <Icon className={`w-6 h-6 ${isActive ? "text-[#1cb0f6]" : "text-[#afafaf]"}`} />
+                  <Icon className={`w-6 h-6 ${isActive ? "text-[#1cb0f6]" : "text-[#afafaf] dark:text-[#557585]"}`} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -65,13 +65,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDevTools }) => {
         </div>
 
         {/* Evaluation / Dev controls pill */}
-        <div className="pt-4 border-t border-[#e5e5e5]">
+        <div className="pt-4 border-t border-[#e5e5e5] dark:border-[#2e4550]">
           <button
             onClick={() => {
               sound.playClick();
               if (onOpenDevTools) onOpenDevTools();
             }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-[#e5e5e5] text-xs font-bold text-[#777777] hover:bg-[#f7f7f7] hover:text-[#4b4b4b] transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-[#e5e5e5] dark:border-[#2e4550] text-xs font-bold text-[#777777] dark:text-[#8b9eab] hover:bg-[#f7f7f7] dark:hover:bg-[#1b2e35] hover:text-[#4b4b4b] dark:hover:text-white transition-colors"
           >
             <Wrench className="w-4 h-4 text-[#ff9600]" />
             <span>Dev & Testing Tools</span>
@@ -80,7 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDevTools }) => {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t-2 border-[#e5e5e5] flex justify-around items-center px-2 z-40">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-[#131f24] border-t-2 border-[#e5e5e5] dark:border-[#2e4550] flex justify-around items-center px-2 z-40 transition-colors">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -90,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDevTools }) => {
               href={item.href}
               onClick={() => sound.playClick()}
               className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all ${
-                isActive ? "text-[#1cb0f6]" : "text-[#afafaf]"
+                isActive ? "text-[#1cb0f6]" : "text-[#afafaf] dark:text-[#557585]"
               }`}
             >
               <Icon className="w-6 h-6" />
@@ -102,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDevTools }) => {
             sound.playClick();
             if (onOpenDevTools) onOpenDevTools();
           }}
-          className="p-2 text-[#777777]"
+          className="p-2 text-[#777777] dark:text-[#8b9eab]"
         >
           <Wrench className="w-5 h-5 text-[#ff9600]" />
         </button>

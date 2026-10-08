@@ -35,10 +35,17 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     user-select: none;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Dark mode classes */
+  body.dark-mode {
+    background-color: #131f24 !important;
+    color: #ffffff !important;
   }
 }
 
-/* Duolingo 3D Tactile Buttons */
+/* Light Theme 3D Tactile Buttons */
 .duo-btn-green {
   background-color: #58cc02;
   border-bottom: 4px solid #46a302;
@@ -105,6 +112,28 @@
   border-bottom-width: 4px;
   border-bottom-color: #1cb0f6;
   color: #1899d6;
+}
+
+/* Dark Mode Variants */
+.dark-mode .duo-btn-white {
+  background-color: #1b2e35;
+  border-color: #2e4550;
+  border-bottom-color: #2e4550;
+  color: #ffffff;
+}
+.dark-mode .duo-btn-white:hover:not(:disabled) {
+  background-color: #243c45;
+}
+.dark-mode .duo-btn-gray {
+  background-color: #243c45;
+  border-bottom-color: #1b2e35;
+  color: #557585;
+}
+.dark-mode .duo-card-selected {
+  background-color: #1b3848;
+  border-color: #1cb0f6;
+  border-bottom-color: #1899d6;
+  color: #1cb0f6;
 }
 
 /* Wobbly Bounce Animation */
