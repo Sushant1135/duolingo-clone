@@ -1,245 +1,162 @@
-# 🦉 Duolingo Web App Clone - SDE Fullstack Assignment
+﻿# Duolingo Web App Clone
 
-An authentic, modern, and playful fullstack clone of the **Duolingo** web application. Replicates Duolingo's signature design language, tactile user experience, serpentine learning path, multi-modal exercise lesson loop, and gamification mechanics (daily streaks, hearts, XP, leagues, daily quests, and sound synthesizers).
+Fullstack SDE assignment implementation of a Duolingo-style learning app. The project recreates the core learning path, lesson loop, hearts, XP, streaks, quests, leaderboard, shop, and learner profile using Next.js, FastAPI, and SQLite.
 
----
+## Tech Stack
 
-## 🌟 Live Features & Highlights
+- Frontend: Next.js 16, React 19, TypeScript, Tailwind CSS
+- Backend: Python, FastAPI, SQLAlchemy
+- Database: SQLite
+- Audio: Web Audio API sound effects and browser Speech Synthesis
 
-### 1. 🗺️ Sinuous Learning Path / Skill Tree
-- **Serpentine Path:** Sinuous, winding nodes that snake smoothly down the screen.
-- **Unit Headers:** Unit banners with custom Duolingo colors (`#58cc02` Green, `#1cb0f6` Blue, `#ce82ff` Purple), titles, subtitles, and interactive **Guidebook** modals with grammar tips and audio pronunciation.
-- **Node Progression:** 
-  - 🔓 **Unlocked Skills** with crown progress rings and lesson counters.
-  - 🔒 **Locked Skills** with padlocks.
-  - 👑 **Completed Skills** with gold crowns.
-  - 🦉 **Animated Duo Mascot** bouncing directly on the active node with an interactive speech bubble (*"START HERE!"*).
-- **Skill Popovers:** Clicking any unlocked skill opens a tactile popover showing lesson progress and a big green `START +15 XP` action button.
+## Features
 
-### 2. 🎮 Interactive Lesson Player (The Core Loop)
-Supports **all 5 signature exercise types**:
-1. **Multiple Choice (`multiple_choice`):** Tactile cards with number shortcuts, optional prompt images and target translations.
-2. **Translate Words / Word Bank (`translate_words`):** Interactive token selection; tapped words snap into the sentence dropzone, tapping them on the line sends them back to the bank.
-3. **Match Pairs (`match_pairs`):** Real-time dual-column card matching (Spanish & English) with green flash on match and red shake on error.
-4. **Fill in the Blank (`fill_blank`):** Sentence templates with missing blank slots and multiple choice pill selectors.
-5. **Type the Answer (`type_answer`):** Free-text translation with fuzzy normalization, accent tolerance, and a Spanish character helper bar (`á`, `é`, `í`, `ó`, `ú`, `ñ`, `¿`, `¡`).
-- **Signature Feedback Drawer:** 
-  - Correct: Slide-up `#d7ffb8` drawer with green checkmark, praise (*"Nicely done!"*), and arpeggiated chime.
-  - Incorrect: Slide-up `#ffdfe0` drawer with red X, correct solution, explanation, and buzzer sound.
-- **Hearts System:** Lose 1 heart on incorrect answers. Reaching 0 hearts triggers the **Out of Hearts** modal with Gem refill, practice session, or quick dev bypass.
-- **Celebratory Finish:** Confetti bursts, celebrating Duo mascot, stat badges (XP earned, streak count, accuracy percentage), and crown level-up notifications.
+- Duolingo-style learning path with units, locked/unlocked skills, active lesson nodes, progress rings, crowns, and guidebook modals.
+- Lesson player with five exercise types: multiple choice, word-bank translation, match pairs, fill in the blank, and type-the-answer.
+- Immediate correct/incorrect feedback bar with answer explanations.
+- Hearts system with heart loss, passive regeneration, refill via gems, and an out-of-hearts modal.
+- Persistent learner progress for XP, streak, hearts, gems, completed lessons, skill unlocks, quests, and achievements.
+- Seeded German course with two distinct sections (Foundations and Everyday Communication), three unique units per section, and unit-specific skills, lessons, exercises, vocabulary, and guidebooks.
+- Profile, leaderboard, quests, shop, dark mode, sound controls, and evaluator/dev testing tools.
 
-### 3. 🔊 Web Audio API & Web Speech Engine
-- Built-in zero-dependency Web Audio API synthesizer for:
-  - Cheerful 4-note ascending chime (`playCorrect()`)
-  - Low descending error buzz (`playIncorrect()`)
-  - Tactile button pop (`playClick()`)
-  - Victory fanfare (`playLessonComplete()`)
-- Native Web Speech API integration (`speechSynthesis`) that reads Spanish phrases aloud at realistic learner pace on click or hover.
+## Project Structure
 
-### 4. 🏆 Gamification, Leagues & Quests
-- **Streak Counter:** Increments on daily lesson completion, with streak freeze protection and testing day simulation.
-- **Weekly Leagues:** Real-time synchronized leaderboard (Bronze, Silver, Gold, Sapphire, etc.) with promotion zones (top 3) and demotion zones.
-- **Daily Quests:** Progress bars for XP goals and lesson completions, with one-click gem claim rewards.
-- **Shop / Store:** Heart refills, streak freezes, double-or-nothing wagers, and avatar unlocks.
-- **Learner Profile:** Statistics grid (streak, total XP, current league, crowns) and multi-tiered achievements (*Wildfire*, *Sage*, *Champion*, *Scholar*).
+```text
+backend/
+  main.py                 Compatibility entrypoint for `uvicorn main:app`
+  app/
+    main.py                FastAPI setup, database initialization, seeding
+    core/database.py       SQLite engine, declarative base, and sessions
+    models/
+      entities.py          SQLAlchemy persistence models
+      schemas.py           Pydantic request and response models
+    features/
+      courses/              Course API controller and course-content service
+      lessons/              Lesson API controller and answer-evaluation service
+      users/                Learner API controller and progress/quest service
+      leaderboards/         League API controller
+      shop/                 Store API controller and purchase service
+    routes/api.py           API router registry
+    services/seed_data.py   Seeded German course and learner data
 
----
-
-## 🏛️ System Architecture
-
-```mermaid
-flowchart TD
-    subgraph Client ["Frontend (Next.js 16 + React 19 + TypeScript + Tailwind CSS)"]
-        UI["Duolingo UI Components"]
-        AudioEng["Web Audio & Speech Engine"]
-        APICli["Type-safe API Client"]
-    end
-
-    subgraph Server ["Backend (FastAPI + Python 3.13)"]
-        FastAPIApp["FastAPI REST Endpoints"]
-        AuthProgress["Progress & Gamification Logic"]
-        EvalEngine["Exercise Evaluation Engine"]
-    end
-
-    subgraph Storage ["Database (SQLite3 + SQLAlchemy ORM)"]
-        UsersTbl[("Users & Stats")]
-        CourseTbl[("Courses, Units & Skills")]
-        LessonsTbl[("Lessons & Exercises")]
-        ProgressTbl[("User Progress & Quests")]
-    end
-
-    UI --> AudioEng
-    UI --> APICli
-    APICli -->|JSON REST API| FastAPIApp
-    FastAPIApp --> EvalEngine
-    FastAPIApp --> AuthProgress
-    AuthProgress --> UsersTbl
-    AuthProgress --> ProgressTbl
-    EvalEngine --> LessonsTbl
-    FastAPIApp --> CourseTbl
+frontend/
+  src/app/                  Next.js App Router entrypoints and global styles
+  src/features/
+    learn/                  Path, section, lesson navigation MVC
+    practice/               Practice session MVC
+    profile/                Learner profile MVC
+    leaderboards/           League MVC and league model
+    quests/                 Daily and monthly quest MVC
+    shop/                   Store MVC
+    settings/               Preferences MVC and preference model
+  src/models/               Shared API/domain types and course helpers
+  src/services/             Shared typed API client and browser audio integration
+  src/shared/
+    controllers/             Shared theme state provider
+    views/components/        Reusable UI and lesson components
 ```
 
----
+The backend groups HTTP controllers and domain services by feature while keeping
+the shared relational entities and Pydantic contracts centralized. Route
+registration wires feature routers; controllers handle HTTP concerns and delegate
+reusable domain operations to services. The frontend follows the same feature
+boundary: each feature has its view and a custom-hook controller for state,
+navigation, and user actions. Next.js-required route files in `src/app` remain
+thin entrypoints. Cross-feature types, API transport, browser integrations, theme
+state, and reusable UI are shared rather than duplicated.
 
-## 🗄️ Database Schema Design
+## Database Schema
 
-```mermaid
-erDiagram
-    USERS ||--o{ USER_LESSON_PROGRESS : tracks
-    USERS ||--o{ USER_SKILL_PROGRESS : tracks
-    USERS ||--o{ QUESTS : has
-    COURSES ||--o{ UNITS : contains
-    UNITS ||--o{ SKILLS : contains
-    SKILLS ||--o{ LESSONS : contains
-    LESSONS ||--o{ EXERCISES : contains
-    LESSONS ||--o{ USER_LESSON_PROGRESS : records
-    SKILLS ||--o{ USER_SKILL_PROGRESS : records
+Core tables:
 
-    USERS {
-        int id PK
-        string username
-        string name
-        int streak
-        int max_streak
-        string last_streak_date
-        int xp
-        int gems
-        int hearts
-        int max_hearts
-        int streak_freeze
-        string league
-    }
+- `users`: default logged-in learner profile, streak, XP, gems, hearts, active course, league.
+- `courses`: language courses.
+- `units`: ordered course sections with guidebook content.
+- `skills`: ordered learning path skills inside units.
+- `lessons`: lesson records for each skill.
+- `exercises`: JSON-backed exercise prompts, options, and solutions.
+- `user_lesson_progress`: per-user lesson completions and scores.
+- `user_skill_progress`: per-user skill unlock/completion state.
+- `leaderboard_users`: seeded competitors plus synced current user.
+- `quests`: daily quest progress and claim state.
+- `user_daily_activity`: first-completion XP, lesson, high-score, and timed-learning totals by date.
+- `monthly_quests`: monthly quest progress, reward claims, and earned badge history.
+- `achievements`: profile achievement progress.
 
-    COURSES {
-        int id PK
-        string title
-        string code
-        string flag
-        string description
-    }
+The SQLite database is created and seeded automatically when the backend starts.
 
-    UNITS {
-        int id PK
-        int course_id FK
-        int unit_number
-        string title
-        string subtitle
-        string color
-        text guide_content
-    }
+## API Overview
 
-    SKILLS {
-        int id PK
-        int unit_id FK
-        int order
-        string title
-        string icon
-        int total_lessons
-    }
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/users/me` | Active learner profile, hearts, streak, XP, gems |
+| `PATCH` | `/api/users/me` | Update demo learner stats |
+| `POST` | `/api/users/refill-hearts` | Refill hearts through gems, practice, or demo refill |
+| `POST` | `/api/users/simulate-streak` | Simulate streak dates for testing |
+| `POST` | `/api/users/reset-progress` | Reset learner progress to the start |
+| `GET` | `/api/courses` | List available courses |
+| `GET` | `/api/courses/{course_id}/tree` | Full unit/skill path with lock states |
+| `GET` | `/api/courses/units/{unit_id}/guidebook` | Unit guidebook notes |
+| `GET` | `/api/lessons/{lesson_id}` | Lesson detail with exercises |
+| `POST` | `/api/lessons/exercises/{exercise_id}/submit` | Evaluate an exercise answer and update hearts |
+| `POST` | `/api/lessons/{lesson_id}/complete` | Award XP/gems, update streak, unlock progress |
+| `GET` | `/api/leaderboard` | League standings |
+| `GET` | `/api/users/quests` | Daily quests, monthly quest status, and badge history |
+| `POST` | `/api/users/quests/{quest_id}/claim` | Claim completed daily quest rewards |
+| `POST` | `/api/users/quests/monthly/claim` | Claim the completed monthly quest reward |
+| `GET` | `/api/shop` | Shop inventory |
+| `POST` | `/api/shop/purchase` | Purchase mocked shop items |
 
-    LESSONS {
-        int id PK
-        int skill_id FK
-        int order
-        string title
-        int xp_reward
-    }
+## Local Setup
 
-    EXERCISES {
-        int id PK
-        int lesson_id FK
-        int order
-        string type
-        string prompt
-        string target_text
-        string audio_text
-        text question_data
-        text solution_data
-    }
-```
+### 1. Backend
 
----
-
-## 🚀 Quick Start & Local Execution
-
-### Prerequisites
-- **Python 3.10+**
-- **Node.js 18+** and **npm**
-
----
-
-### Step 1: Start the Backend (FastAPI)
 ```bash
 cd backend
 python -m pip install -r requirements.txt
-python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
-- API will be accessible at: `http://localhost:8000`
-- Interactive Swagger UI: `http://localhost:8000/docs`
-- *Note:* Database SQLite (`duolingo.db`) is automatically created and seeded on startup.
 
----
+Backend URL: `http://localhost:8000`
 
-### Step 2: Start the Frontend (Next.js)
-In a separate terminal window:
+Swagger docs: `http://localhost:8000/docs`
+
+### 2. Frontend
+
+Open a second terminal:
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-- Web Application will be live at: `http://localhost:3000`
 
----
+Frontend URL: `http://localhost:3000`
 
-## 🧪 Evaluator & Testing Controls
+To open the development app on a phone connected to the same Wi-Fi, use the computer's Wi-Fi IPv4 address instead of `localhost`, for example `http://192.168.1.25:3000`. The app's API client uses that same hostname for the backend. Allow Node.js and Python through Windows Firewall on private networks if prompted or if the phone cannot connect.
 
-For immediate verification during interviews and reviews, click the **"Dev & Testing Tools"** button in the bottom left sidebar or top bar:
-- **❤️ Lose 1 Heart:** Instantly tests heart deduction and out-of-hearts modal handling.
-- **❤️ Refill 5 Hearts:** Immediately replenishes all hearts.
-- **🔥 Advance Day:** Simulates day advancement so the next lesson increments the streak counter.
-- **🧊 Add Streak Freeze:** Adds streak protection freeze.
-- **🔊 Test Audio:** Plays Duolingo's positive chimes and fanfares.
-- **🔄 Reset Learner Progress:** Resets completions to the fresh beginning of Unit 1.
+If PowerShell blocks `npm.ps1`, use:
 
----
+```bash
+npm.cmd run dev
+```
 
-## 🌐 API Overview
+## Validation
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/users/me` | Fetch active user profile, streak, hearts, and gems |
-| `PATCH` | `/api/users/me` | Update user statistics |
-| `POST` | `/api/users/refill-hearts` | Replenish hearts via gems or practice |
-| `POST` | `/api/users/simulate-streak` | Simulate streak dates and day advancement |
-| `POST` | `/api/users/reset-progress` | Reset learner progress back to beginning |
-| `GET` | `/api/courses` | List all available language courses |
-| `GET` | `/api/courses/{id}/tree` | Get full serpentine unit/skill tree with lock states |
-| `GET` | `/api/courses/units/{id}/guidebook` | Retrieve unit guidebook notes and key vocabulary |
-| `GET` | `/api/lessons/{id}` | Retrieve lesson with all interactive exercises |
-| `POST` | `/api/lessons/exercises/{id}/submit` | Evaluate exercise answer, handle hearts loss |
-| `POST` | `/api/lessons/{id}/complete` | Complete lesson, award XP, update streak and unlock next skill |
-| `GET` | `/api/leaderboard` | Get weekly league standings with real-time XP sync |
-| `GET` | `/api/users/quests` | Retrieve daily quests and progress |
-| `POST` | `/api/users/quests/{id}/claim` | Claim gem rewards for completed quests |
-| `GET` | `/api/shop` | Retrieve shop inventory items |
-| `POST` | `/api/shop/purchase` | Purchase power-ups or outfits with gems |
+```bash
+cd backend
+python -m compileall .
 
----
+cd ../frontend
+npm.cmd run lint
+npm.cmd run build
+```
 
-## 🚢 Deployment Guide
+## Evaluator Notes
 
-- **Frontend (Vercel / Netlify):**
-  1. Push repository to GitHub.
-  2. Import project into Vercel and select root directory as `frontend`.
-  3. Add environment variable: `NEXT_PUBLIC_API_URL=https://your-backend.onrender.com`.
-  4. Deploy.
-- **Backend (Render / Railway / Fly.io):**
-  1. Select root directory as `backend`.
-  2. Build command: `pip install -r requirements.txt`.
-  3. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
-
----
-
-## 📄 License
-MIT License. Built for the SDE Fullstack Assignment.
+- Authentication is simplified to a default learner with `user_id = 1`.
+- Course content is intentionally small but fully database-backed and seeded.
+- Real speech recognition and payments are placeholders, as allowed by the assignment.
+- The dev/testing tools modal can reset progress, refill hearts, deduct hearts, simulate streak dates, and test sounds.
+- Frontend deployment can use Vercel with `NEXT_PUBLIC_API_URL` pointing to the deployed backend.
+- Backend deployment can use Render, Railway, or similar with `uvicorn main:app --host 0.0.0.0 --port $PORT`.
