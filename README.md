@@ -4,6 +4,16 @@ A full-stack language-learning web application developed as part of an SDE assig
 
 The application uses **Next.js and TypeScript** for the frontend, **FastAPI and SQLAlchemy** for the backend, and **SQLite** for persistent data storage. Its German learning course is organized into sections, units, skills, lessons, and exercises, with course progress and learner activity stored in the database.
 
+## Live Deployment
+
+- **Web app:** [https://duolingo-clone-tau-smoky.vercel.app](https://duolingo-clone-tau-smoky.vercel.app)
+- **Backend API:** [https://duolingo-clone-api-we2n.onrender.com](https://duolingo-clone-api-we2n.onrender.com)
+- **Interactive API docs:** [https://duolingo-clone-api-we2n.onrender.com/docs](https://duolingo-clone-api-we2n.onrender.com/docs)
+
+The backend runs on Render's free tier. It may take up to a minute to respond
+after inactivity, and learner progress may reset when its ephemeral SQLite
+storage is lost during a restart or redeployment.
+
 ## Project Overview
 
 The application is designed to demonstrate the development of a complete full-stack product, from interactive frontend components to backend APIs and relational data persistence.
@@ -173,8 +183,8 @@ after inactivity, which may make the first request take longer.
 1. Import this GitHub repository into Vercel.
 2. Set the project Root Directory to `frontend`.
 3. Add the environment variable `NEXT_PUBLIC_API_URL` with the Render API URL
-   (for example, `https://duolingo-clone-api.onrender.com`; do not add a trailing
-   slash).
+   (for this deployment, `https://duolingo-clone-api-we2n.onrender.com`; do not
+   add a trailing slash).
 4. Deploy or redeploy after setting the variable, since Next.js reads it when
    building the frontend.
 
