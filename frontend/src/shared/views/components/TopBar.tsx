@@ -2,9 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { Flame, Gem, Heart } from "lucide-react";
+import { Gem, Heart } from "lucide-react";
 import { User } from "@/models/api";
 import { sound } from "@/services/audio";
+import { StreakIcon } from "@/shared/views/components/StreakIcon";
 
 type CefrLevel = "A1" | "A2";
 
@@ -44,13 +45,13 @@ export const TopBar: React.FC<TopBarProps> = ({
             sound.playClick();
             onOpenStreakModal();
           }}
-          className="flex items-center gap-2 rounded-xl px-1.5 py-1 hover:bg-[#fff4e5] dark:hover:bg-[#2b211a] transition-colors group"
+          className="flex items-center gap-2 rounded-xl bg-[#f4f7f8] px-2.5 py-2 transition-colors hover:bg-[#e8eef0] dark:bg-[#202f36] dark:hover:bg-[#2b3d45] group"
           title="Streak details"
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff9600] border-b-4 border-[#d97800]">
-            <Flame className="w-6 h-6 text-white fill-white group-hover:scale-110 transition-transform" />
+          <span className="flex h-7 w-7 items-center justify-center">
+            <StreakIcon className="h-6 w-6 text-[#52656d] transition-transform group-hover:scale-110 dark:text-[#60747d]" />
           </span>
-          <span className="font-extrabold text-base text-[#ff9600]">{user?.streak ?? 0}</span>
+          <span className="font-extrabold text-base text-[#52656d] dark:text-[#60747d]">{user?.streak ?? 0}</span>
         </button>
 
         <Link

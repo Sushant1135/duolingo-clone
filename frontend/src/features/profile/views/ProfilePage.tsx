@@ -9,7 +9,6 @@ import { HeartsModal } from "@/shared/views/components/HeartsModal";
 import { DevBar } from "@/shared/views/components/DevBar";
 import { useProfileController } from "@/features/profile/controllers/useProfileController";
 import {
-  Flame,
   Zap,
   Shield,
   Crown,
@@ -21,6 +20,7 @@ import {
   Search,
   ChevronRight,
 } from "lucide-react";
+import { StreakIcon } from "@/shared/views/components/StreakIcon";
 
 export default function ProfilePage() {
   const {
@@ -99,7 +99,7 @@ export default function ProfilePage() {
                 <h2 id="profile-statistics" className="mb-4 text-xl font-extrabold">Statistics</h2>
                 <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
                   <div className="flex min-h-24 items-center gap-4 overflow-hidden rounded-2xl border-2 border-[#e5b000] bg-[#ffc800] p-4 text-white shadow-[0_4px_0_#dfa900]">
-                    <Flame className="h-8 w-8 shrink-0 fill-[#ff9600] text-[#ff9600]" />
+                    <StreakIcon className="h-8 w-8 shrink-0 text-[#ff9600]" />
                     <div><p className="text-xl font-extrabold">{user?.streak ?? 0}</p><p className="text-sm font-bold">Day streak</p></div>
                   </div>
                   <div className="flex min-h-24 items-center gap-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--surface)] p-4">

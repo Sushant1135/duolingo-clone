@@ -8,7 +8,6 @@ import {
   VolumeX,
   CheckCircle2,
   XCircle,
-  Flame,
   Zap,
   Sparkles,
   ArrowRight,
@@ -18,6 +17,7 @@ import type { Exercise, SubmitResult } from "@/models/api";
 import { sound } from "@/services/audio";
 import { useLessonController } from "@/features/learn/controllers/useLessonController";
 import { DuoMascot } from "@/shared/views/components/DuoMascot";
+import { StreakIcon } from "@/shared/views/components/StreakIcon";
 
 const normalizeWordTile = (token: string) =>
   token.normalize("NFKC").toLocaleLowerCase("de-DE").replace(/[\p{P}\p{S}]/gu, "").trim();
@@ -374,7 +374,7 @@ const LessonSession: React.FC<LessonPlayerProps> = ({
             <div className="p-4 rounded-2xl border-2 border-[#ff9600] bg-[#fff9f0] dark:bg-[#2b211a] flex flex-col items-center">
               <span className="text-xs font-extrabold uppercase text-[#ff9600]">Streak</span>
               <div className="flex items-center gap-1.5 mt-1">
-                <Flame className="w-5 h-5 text-[#ff9600] fill-[#ff9600]" />
+                <StreakIcon className="h-5 w-5 text-[#ff9600]" />
                 <span className="text-xl font-extrabold text-[#ff9600]">
                   {completionResult.streak} Days
                 </span>

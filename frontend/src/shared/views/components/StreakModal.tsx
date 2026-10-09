@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { X, Flame, ShieldCheck, Check } from "lucide-react";
+import { X, ShieldCheck, Check } from "lucide-react";
 import { User } from "@/models/api";
 import { sound } from "@/services/audio";
+import { StreakIcon } from "@/shared/views/components/StreakIcon";
 
 interface StreakModalProps {
   isOpen: boolean;
@@ -39,7 +40,7 @@ export const StreakModal: React.FC<StreakModalProps> = ({
 
         {/* Flame Graphic */}
         <div className="w-20 h-20 mx-auto rounded-3xl bg-[#fff4e5] border-2 border-[#ff9600] flex items-center justify-center mb-4 shadow-sm animate-bounce-subtle">
-          <Flame className="w-12 h-12 text-[#ff9600] fill-[#ff9600]" />
+          <StreakIcon className="h-12 w-12 text-[#ff9600]" />
         </div>
 
         <h2 className="text-2xl font-extrabold text-[#4b4b4b] mb-1">

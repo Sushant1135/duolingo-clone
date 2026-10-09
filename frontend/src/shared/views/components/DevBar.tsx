@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { X, Wrench, Flame, RotateCcw, Plus, Minus, Volume2, Sparkles } from "lucide-react";
+import { X, Wrench, RotateCcw, Plus, Minus, Volume2, Sparkles } from "lucide-react";
 import { sound } from "@/services/audio";
+import { StreakIcon } from "@/shared/views/components/StreakIcon";
 
 interface DevBarProps {
   isOpen: boolean;
@@ -96,7 +97,7 @@ export const DevBar: React.FC<DevBarProps> = ({
                 }}
                 className="p-3 rounded-xl border border-[#e5e5e5] hover:border-[#ff9600] bg-white hover:bg-[#fff9f0] flex items-center gap-2 text-xs font-bold text-[#ff9600] transition-colors"
               >
-                <Flame className="w-4 h-4" />
+                <StreakIcon className="h-4 w-4" />
                 <span>Advance Day</span>
               </button>
               <button
