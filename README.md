@@ -152,20 +152,20 @@ To access the development application from a phone connected to the same Wi-Fi n
 
 ## Deployment
 
-The production setup uses Vercel for the Next.js frontend and Render for the
-FastAPI backend. Learner progress is stored in SQLite on a 1 GB persistent
-Render disk; the Render API service therefore uses a paid instance and disk.
-Without persistent storage, learner progress can be lost when the API restarts
-or is redeployed.
+The production setup uses Vercel for the Next.js frontend and Render's free
+web-service tier for the FastAPI backend. The free tier uses local SQLite
+storage without a persistent disk, so learner progress may be lost when the
+service restarts or is redeployed. Free Render services can also spin down
+after inactivity, which may make the first request take longer.
 
 ### Deploy the backend to Render
 
 1. In Render, create a Blueprint and connect this GitHub repository.
 2. Render reads `render.yaml` from the repository root to create the API service.
-   It builds from `backend/`, checks `/` for health, and stores the database at
-   `/var/data/duolingo.db` on the persistent disk.
+   It builds from `backend/` and checks `/` for health. The free instance stores
+   its SQLite database on ephemeral local storage.
 3. Wait for the service to finish deploying and copy its public URL, for example
-   `https://duolingo-clone-api.onrender.com`.
+   `https://duolingo-clone-api-we2n.onrender.com`.
 4. Check that the API responds at the service URL and that `/docs` loads.
 
 ### Deploy the frontend to Vercel
