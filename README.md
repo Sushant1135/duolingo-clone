@@ -214,6 +214,7 @@ npm.cmd run build
 
 ## Evaluator Notes
 
+- This is a browser-based web application with app-like learning and gamification features; it is not a native Android or iOS app.
 - Authentication is simplified to a default learner with `user_id = 1`.
 - Course content is intentionally small but fully database-backed and seeded.
 - Real speech recognition and payments are placeholders, as allowed by the assignment.
