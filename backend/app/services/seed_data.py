@@ -78,7 +78,8 @@ def migrate_demo_account(db: Session):
 def seed_database(db: Session):
     ensure_quest_schema(db)
     existing_user = db.query(User).filter(User.id == 1).first()
-    if not existing_user:
+    is_new_user = existing_user is None
+    if is_new_user:
         db.add(User(
             id=1,
             username="learner_alex",
@@ -101,7 +102,8 @@ def seed_database(db: Session):
         db.commit()
 
     migrate_german_course(db)
-    migrate_demo_account(db)
+    if is_new_user:
+        migrate_demo_account(db)
 
     if not db.query(UserLessonProgress).filter(UserLessonProgress.user_id == 1).first():
         db.add(UserLessonProgress(

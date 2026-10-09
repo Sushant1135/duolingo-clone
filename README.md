@@ -150,6 +150,39 @@ Frontend URL: `http://localhost:3000`
 
 To access the development application from a phone connected to the same Wi-Fi network, use the computer's Wi-Fi IPv4 address instead of `localhost`, for example `http://192.168.1.25:3000`. The app's API client uses that same hostname for the backend. Allow Node.js and Python through Windows Firewall on private networks if prompted or if the phone cannot connect.
 
+## Deployment
+
+The production setup uses Vercel for the Next.js frontend and Render for the
+FastAPI backend. Learner progress is stored in SQLite on a 1 GB persistent
+Render disk; the Render API service therefore uses a paid instance and disk.
+Without persistent storage, learner progress can be lost when the API restarts
+or is redeployed.
+
+### Deploy the backend to Render
+
+1. In Render, create a Blueprint and connect this GitHub repository.
+2. Render reads `render.yaml` from the repository root to create the API service.
+   It builds from `backend/`, checks `/` for health, and stores the database at
+   `/var/data/duolingo.db` on the persistent disk.
+3. Wait for the service to finish deploying and copy its public URL, for example
+   `https://duolingo-clone-api.onrender.com`.
+4. Check that the API responds at the service URL and that `/docs` loads.
+
+### Deploy the frontend to Vercel
+
+1. Import this GitHub repository into Vercel.
+2. Set the project Root Directory to `frontend`.
+3. Add the environment variable `NEXT_PUBLIC_API_URL` with the Render API URL
+   (for example, `https://duolingo-clone-api.onrender.com`; do not add a trailing
+   slash).
+4. Deploy or redeploy after setting the variable, since Next.js reads it when
+   building the frontend.
+
+The frontend calls the public API directly, so no secrets belong in
+`NEXT_PUBLIC_API_URL`. The API currently allows browser requests from any
+origin; restrict CORS to the deployed Vercel domain before adding private user
+data or authentication.
+
 If PowerShell blocks `npm.ps1`, use:
 
 ```bash
