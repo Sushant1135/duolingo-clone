@@ -6,7 +6,7 @@ The application uses **Next.js and TypeScript** for the frontend, **FastAPI and 
 
 ## Live Deployment
 
-- **Web app:** [https://duolingo-clone-tau-smoky.vercel.app](https://duolingo-clone-tau-smoky.vercel.app)
+- **Browser-based website:** [https://duolingo-clone-tau-smoky.vercel.app](https://duolingo-clone-tau-smoky.vercel.app)
 - **Backend API:** [https://duolingo-clone-api-we2n.onrender.com](https://duolingo-clone-api-we2n.onrender.com)
 - **Interactive API docs:** [https://duolingo-clone-api-we2n.onrender.com/docs](https://duolingo-clone-api-we2n.onrender.com/docs)
 
