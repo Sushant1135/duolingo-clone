@@ -1,6 +1,6 @@
 # Duolingo Web App Clone
 
-A full-stack language-learning web application developed as part of an SDE assignment. The project recreates the core learning experience of Duolingo, combining an interactive learning path, structured lessons, progress tracking, gamification, and learner-focused features in a responsive web interface.
+A full-stack language-learning web application inspired by Duolingo. It combines an interactive learning path, structured lessons, progress tracking, gamification, and learner-focused features in a responsive web interface.
 
 The application uses **Next.js and TypeScript** for the frontend, **FastAPI and SQLAlchemy** for the backend, and **SQLite** for persistent data storage. Its German learning course is organized into sections, units, skills, lessons, and exercises, with course progress and learner activity stored in the database.
 
