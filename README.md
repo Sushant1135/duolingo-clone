@@ -1,6 +1,24 @@
-﻿# Duolingo Web App Clone
+# Duolingo Web App Clone
 
-Fullstack SDE assignment implementation of a Duolingo-style learning app. The project recreates the core learning path, lesson loop, hearts, XP, streaks, quests, leaderboard, shop, and learner profile using Next.js, FastAPI, and SQLite.
+A full-stack language-learning web application developed as part of an SDE assignment. The project recreates the core learning experience of Duolingo, combining an interactive learning path, structured lessons, progress tracking, gamification, and learner-focused features in a responsive web interface.
+
+The application uses **Next.js and TypeScript** for the frontend, **FastAPI and SQLAlchemy** for the backend, and **SQLite** for persistent data storage. Its German learning course is organized into sections, units, skills, lessons, and exercises, with course progress and learner activity stored in the database.
+
+## Project Overview
+
+The application is designed to demonstrate the development of a complete full-stack product, from interactive frontend components to backend APIs and relational data persistence.
+
+Key areas include:
+
+- **Interactive learning experience:** A structured learning path with units, skills, locked and unlocked lessons, progress indicators, and contextual guidebooks.
+- **Lesson execution:** An interactive lesson player supporting multiple exercise formats, answer evaluation, and immediate feedback.
+- **Gamification:** XP, streaks, hearts, gems, daily quests, monthly quests, achievements, and leaderboard rankings.
+- **Learner progress:** Persistent tracking of completed lessons, scores, skill progression, and daily learning activity.
+- **Practice and review:** Dedicated practice activities and review experiences to reinforce vocabulary and previously learned material.
+- **Rewards and store:** A shop with purchasable demo items and reward-related interactions.
+- **Personalization:** Learner profile, theme preferences, sound controls, and development tools for testing application behavior.
+
+The project emphasizes modular feature organization, reusable components, typed API communication, and a clear separation between frontend presentation and backend business logic.
 
 ## Tech Stack
 
@@ -56,14 +74,9 @@ frontend/
     views/components/        Reusable UI and lesson components
 ```
 
-The backend groups HTTP controllers and domain services by feature while keeping
-the shared relational entities and Pydantic contracts centralized. Route
-registration wires feature routers; controllers handle HTTP concerns and delegate
-reusable domain operations to services. The frontend follows the same feature
-boundary: each feature has its view and a custom-hook controller for state,
-navigation, and user actions. Next.js-required route files in `src/app` remain
-thin entrypoints. Cross-feature types, API transport, browser integrations, theme
-state, and reusable UI are shared rather than duplicated.
+The backend organizes HTTP controllers and domain services by feature while keeping shared relational entities and Pydantic contracts centralized. Route registration connects the feature routers, controllers handle HTTP requests, and services contain reusable domain operations.
+
+The frontend follows the same feature-oriented approach. Each feature contains its views and custom-hook controllers for state, navigation, and user actions. Next.js route files in `src/app` serve as thin entrypoints, while shared types, API communication, browser integrations, theme state, and reusable UI components are maintained separately to reduce duplication.
 
 ## Database Schema
 
@@ -111,6 +124,8 @@ The SQLite database is created and seeded automatically when the backend starts.
 
 ### 1. Backend
 
+Open a terminal and run:
+
 ```bash
 cd backend
 python -m pip install -r requirements.txt
@@ -123,7 +138,7 @@ Swagger docs: `http://localhost:8000/docs`
 
 ### 2. Frontend
 
-Open a second terminal:
+Open a second terminal and run:
 
 ```bash
 cd frontend
@@ -133,7 +148,7 @@ npm run dev
 
 Frontend URL: `http://localhost:3000`
 
-To open the development app on a phone connected to the same Wi-Fi, use the computer's Wi-Fi IPv4 address instead of `localhost`, for example `http://192.168.1.25:3000`. The app's API client uses that same hostname for the backend. Allow Node.js and Python through Windows Firewall on private networks if prompted or if the phone cannot connect.
+To access the development application from a phone connected to the same Wi-Fi network, use the computer's Wi-Fi IPv4 address instead of `localhost`, for example `http://192.168.1.25:3000`. The app's API client uses that same hostname for the backend. Allow Node.js and Python through Windows Firewall on private networks if prompted or if the phone cannot connect.
 
 If PowerShell blocks `npm.ps1`, use:
 
@@ -142,6 +157,8 @@ npm.cmd run dev
 ```
 
 ## Validation
+
+Run the following commands to check the backend and frontend.
 
 ```bash
 cd backend
