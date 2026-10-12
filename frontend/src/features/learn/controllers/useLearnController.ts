@@ -21,6 +21,7 @@ export function useLearnController() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData | null>(null);
   const [quests, setQuests] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showSectionOverview, setShowSectionOverview] = useState(false);
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
   const [selectedGuidebookUnit, setSelectedGuidebookUnit] = useState<Unit | null>(null);
@@ -38,22 +39,34 @@ export function useLearnController() {
     : getDefaultSectionId(sections);
 
   const refreshAllData = async () => {
+    setLoadError(null);
     try {
-      const [userData, treeData, leaderboardData, questsData] = await Promise.all([
+      const [userData, treeData] = await Promise.all([
         api.getUser(),
         api.getCourseTree(1),
-        api.getLeaderboard(),
-        api.getQuests(),
       ]);
       setUser(userData);
       setCourseTree(treeData);
-      setLeaderboard(leaderboardData);
-      setQuests(questsData.daily);
+
+      void api.getLeaderboard().then(setLeaderboard).catch((error: unknown) => {
+        console.error("Failed to load leaderboard:", error);
+      });
+      void api.getQuests().then((questsData) => {
+        setQuests(questsData.daily);
+      }).catch((error: unknown) => {
+        console.error("Failed to load quests:", error);
+      });
     } catch (error) {
       console.error("Failed to load home page data:", error);
+      setLoadError("We couldn't load the learning path. Check your connection and try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const retryLoad = () => {
+    setLoading(true);
+    void refreshAllData();
   };
 
   useEffect(() => {
@@ -132,6 +145,8 @@ export function useLearnController() {
     leaderboard,
     quests,
     loading,
+    loadError,
+    retryLoad,
     sections,
     selectedSectionId,
     activeLessonId,

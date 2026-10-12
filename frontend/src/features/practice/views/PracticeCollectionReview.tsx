@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,6 +8,7 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Square,
   Volume2,
 } from "lucide-react";
 import { sound } from "@/services/audio";
@@ -176,6 +177,8 @@ export function PracticeCollectionReview({
   const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null);
   const [showTranslation, setShowTranslation] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isStorySpeaking, setIsStorySpeaking] = useState(false);
+  const [storyAudioError, setStoryAudioError] = useState<string | null>(null);
 
   const filteredVocabulary = useMemo(
     () =>
@@ -202,15 +205,56 @@ export function PracticeCollectionReview({
   };
 
   const openStory = (index: number) => {
+    sound.cancelSpeech();
     setActiveStoryIndex(index);
     setShowTranslation(false);
     setSelectedAnswer(null);
+    setIsStorySpeaking(false);
+    setStoryAudioError(null);
   };
 
   const closeStory = () => {
+    sound.cancelSpeech();
     setActiveStoryIndex(null);
     setShowTranslation(false);
     setSelectedAnswer(null);
+    setIsStorySpeaking(false);
+    setStoryAudioError(null);
+  };
+
+  useEffect(() => () => sound.cancelSpeech(), []);
+
+  const toggleStorySpeech = () => {
+    if (!activeStory) return;
+    if (isStorySpeaking) {
+      sound.cancelSpeech();
+      setIsStorySpeaking(false);
+      return;
+    }
+
+    setStoryAudioError(null);
+    const started = sound.speak(activeStory.paragraphs.join(" "), "de-DE", {
+      onEnd: () => setIsStorySpeaking(false),
+      onError: (event) => {
+        setIsStorySpeaking(false);
+        if (event.error !== "canceled" && event.error !== "interrupted") {
+          setStoryAudioError("Spoken audio couldn't start. Check your browser's audio settings and try again.");
+        }
+      },
+      onUnavailable: () => {
+        setIsStorySpeaking(false);
+        setStoryAudioError("No speech voice is available. Enable a German voice in your browser or device settings.");
+      },
+    });
+    if (started) {
+      setIsStorySpeaking(true);
+    } else {
+      setStoryAudioError(
+        sound.getMuted()
+          ? "Audio is muted. Turn sound on in Settings to listen to the story."
+          : "Spoken audio isn't available in this browser.",
+      );
+    }
   };
 
   return (
@@ -348,12 +392,20 @@ export function PracticeCollectionReview({
                 </div>
                 <button
                   type="button"
-                  onClick={() => sound.speak(activeStory.paragraphs.join(" "), "de-DE")}
+                  onClick={toggleStorySpeech}
+                  aria-label={isStorySpeaking ? "Stop story audio" : "Listen to story in German"}
+                  aria-pressed={isStorySpeaking}
                   className="flex items-center gap-2 rounded-xl bg-[#f4eaff] px-4 py-3 font-extrabold text-[#a560d4] dark:bg-[#2d2240]"
                 >
-                  <Volume2 className="h-5 w-5" /> Listen
+                  {isStorySpeaking ? <Square className="h-4 w-4 fill-current" /> : <Volume2 className="h-5 w-5" />}
+                  {isStorySpeaking ? "Stop" : "Listen"}
                 </button>
               </div>
+              {storyAudioError && (
+                <p role="status" className="mb-4 text-sm font-bold text-[#c43d3d] dark:text-[#ff8c8c]">
+                  {storyAudioError}
+                </p>
+              )}
 
               <div className="space-y-4 rounded-2xl bg-[var(--surface-secondary)] p-5 text-lg font-semibold leading-relaxed text-[var(--text-primary)]">
                 {(showTranslation ? activeStory.translation : activeStory.paragraphs).map((paragraph, index) => (

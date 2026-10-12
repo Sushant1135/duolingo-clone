@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Sidebar } from "@/shared/views/components/Sidebar";
 import { TopBar } from "@/shared/views/components/TopBar";
 import { RightPanel } from "@/shared/views/components/RightPanel";
@@ -20,6 +20,8 @@ function HomePageContent() {
     leaderboard,
     quests,
     loading,
+    loadError,
+    retryLoad,
     sections,
     selectedSectionId,
     activeLessonId,
@@ -42,6 +44,13 @@ function HomePageContent() {
     handleResetProgress,
     handleClaimQuest,
   } = useLearnController();
+  const [showBackendWakeupHint, setShowBackendWakeupHint] = useState(false);
+
+  useEffect(() => {
+    if (!loading) return;
+    const timeout = window.setTimeout(() => setShowBackendWakeupHint(true), 3000);
+    return () => window.clearTimeout(timeout);
+  }, [loading]);
 
   if (loading) {
     return (
@@ -50,6 +59,28 @@ function HomePageContent() {
         <h2 className="font-extrabold text-[#58cc02] text-xl tracking-tight">
           Loading Duolingo...
         </h2>
+        {showBackendWakeupHint && (
+          <p role="status" className="max-w-sm px-5 text-center text-sm font-semibold text-[#777]">
+            The free learning server may take a little longer to wake after being inactive.
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  if (loadError && (!courseTree || !user)) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-white px-6 text-center dark:bg-[#101f24]">
+        <DuoMascot mood="neutral" size={110} />
+        <h2 className="text-xl font-extrabold text-[var(--text-primary)]">We couldn&apos;t load your learning path.</h2>
+        <p role="alert" className="max-w-md font-semibold text-[var(--text-secondary)]">{loadError}</p>
+        <button
+          type="button"
+          onClick={retryLoad}
+          className="rounded-xl bg-[#58cc02] px-6 py-3 font-extrabold text-white shadow-[0_4px_0_#46a302] active:translate-y-1 active:shadow-none"
+        >
+          Try again
+        </button>
       </div>
     );
   }

@@ -1,5 +1,11 @@
 // Duolingo sound synthesizer using Web Audio API and Speech Synthesis
 
+type SpeechCallbacks = {
+  onEnd?: () => void;
+  onError?: (event: SpeechSynthesisErrorEvent) => void;
+  onUnavailable?: () => void;
+};
+
 class SoundManager {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
@@ -147,19 +153,23 @@ class SoundManager {
     }
   }
 
-  public speak(text: string, lang: string = "de-DE") {
-    if (this.isMuted) return;
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  public speak(text: string, lang: string = "de-DE", callbacks?: SpeechCallbacks): boolean {
+    if (this.getMuted()) return false;
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
     try {
       const synthesis = window.speechSynthesis;
       this.cancelPendingSpeech();
       synthesis.cancel();
       const cleanText = text.replace(/["'«»¿¡]/g, "").trim();
-      if (!cleanText) return;
+      if (!cleanText) return false;
       const request = ++this.speechRequest;
       const speakWithAvailableVoices = () => {
         if (request !== this.speechRequest || this.isMuted) return;
         this.cancelPendingSpeech();
+        if (synthesis.getVoices().length === 0) {
+          callbacks?.onUnavailable?.();
+          return;
+        }
 
         const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = lang;
@@ -167,6 +177,8 @@ class SoundManager {
         utterance.pitch = 1;
         utterance.volume = 0.85;
         utterance.voice = this.selectVoice(synthesis.getVoices(), lang) ?? null;
+        utterance.onend = () => callbacks?.onEnd?.();
+        utterance.onerror = (event) => callbacks?.onError?.(event);
         synthesis.speak(utterance);
       };
 
@@ -177,8 +189,16 @@ class SoundManager {
         synthesis.addEventListener("voiceschanged", speakWithAvailableVoices, { once: true });
         this.pendingSpeechTimeout = window.setTimeout(speakWithAvailableVoices, 500);
       }
+      return true;
     } catch {
-      // Speech fallback
+      return false;
+    }
+  }
+
+  public cancelSpeech() {
+    this.cancelPendingSpeech();
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
     }
   }
 
